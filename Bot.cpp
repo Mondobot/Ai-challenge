@@ -24,35 +24,50 @@ void Bot::playGame()
 
 void Bot::makeMoves()
 {
-	Move new_move;
+	std::pair<Location, Move> new_move;
 	for (int ant = 0; ant < (int)state.myAnts.size(); ++ant) {
 		int direction = rand() % 4;
 		Location newLoc = state.myAnts[ant].move(direction);
 		
 		if (validMove(newLoc)) {
-			new_move.loc.row = state.myAnts[ant].row;
-			new_move.loc.column = state.myAnts[ant].column;
-			new_move.dir = direction;
+			new_move.first.row = newLoc.row;
+			new_move.first.column = newLoc.column; 
+			new_move.second.loc.row = state.myAnts[ant].row;
+			new_move.second.loc.column = state.myAnts[ant].column;
+			new_move.second.dir = direction;
 			
-			all_moves.push_back(new_move);
+			all_moves.insert(new_move);
+
+			/*
+			if (all_moves.find(new_move.first) != all_moves.end()) {
+				std::cout << "*************\n";
+				std::cout << "*ahahahahaha*\n";
+				std::cout << "*************\n\n";
+			}
 			state.grid[newLoc.row][newLoc.column].antPlayer = 0;
 			state.grid[state.myAnts[ant].row][state.myAnts[ant].column].antPlayer = -1;
+			*/
 		}
 	}
 }
 
-bool Bot::validMove(Location newLocation)
+bool Bot::validMove(Location l)
 {
-	return (!state.grid[newLocation.row][newLocation.column].isWater &&
-        state.grid[newLocation.row][newLocation.column].antPlayer == -1);
+	return (!state.grid[l.row][l.column].isWater &&
+        	state.grid[l.row][l.column].antPlayer == -1 &&
+		all_moves.find(l) == all_moves.end());
 }
 
 void Bot::writeMoves()
 {
-	for (int i = 0; i < (int)all_moves.size(); ++i) {
-		std::cout << "o" << " " << all_moves[i].loc.row;
-		std::cout << " " << all_moves[i].loc.column << " ";
-		std::cout << DIRECTION_LETTER[all_moves[i].dir] << std::endl; 
+	std::map<Location, Move>::iterator it;
+	Move m;	
+
+	for (it = all_moves.begin(); it != all_moves.end(); ++it) {
+		m = (*it).second;
+		std::cout << "o" << " " << m.loc.row;
+		std::cout << " " << m.loc.column << " ";
+		std::cout << DIRECTION_LETTER[m.dir] << std::endl; 
 	}
   
 }

@@ -12,13 +12,13 @@ struct Bot
 	State state;
 
 	/** Vector for storring all moves*/
-	std::vector<Move> all_moves;
+	std::map<Location, Move, compare_loc> all_moves;
 	
 	/** Plays a single game of Ants. */
 	void playGame();
 
-  /** Moves ants on the board. */
-  void makeMoves();
+	/** Moves ants on the board. */
+	void makeMoves();
 
  	/* Sends moves */
 	void writeMoves();

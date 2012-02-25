@@ -7,6 +7,8 @@
 #include <string>
 #include <cstdlib>
 #include <stdint.h>
+#include <map>
+#include <utility>
 
 #include "global.h"
 
@@ -52,6 +54,14 @@ struct Move {
 	Move (Location loc , int dir) {
 		this->loc = loc;
 		this->dir = dir;
+	}
+};
+
+/** Functie de comparat locatii */
+struct compare_loc {
+	bool operator()(Location x, Location y) {
+		
+		return (x.row > y.row) || ((x.row == y.row) && (x.column > y.column));
 	}
 };
 
