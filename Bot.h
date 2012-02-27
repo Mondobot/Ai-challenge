@@ -13,6 +13,7 @@ struct Bot
 
 	/** Vector for storring all moves*/
 	std::map<Location, Move, compare_loc> all_moves;
+	std::vector<std::pair<Location , Move> > assignments;
 	
 	/** Plays a single game of Ants. */
 	void playGame();
@@ -20,8 +21,20 @@ struct Bot
 	/** Moves ants on the board. */
 	void makeMoves();
 
+	void addMoves();
+
  	/* Sends moves */
 	void writeMoves();
+
+	void resetVec(std::vector<int> * , int);
+
+	int zero(std::vector<int>);
+
+	char okMove(Location , Location);
+
+	void assignFood();
+
+	void setAnts();
 
 	/** Checks for a valid move */
 	bool validMove(Location);

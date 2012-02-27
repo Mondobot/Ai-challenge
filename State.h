@@ -4,6 +4,7 @@
 
 #include <iostream>
 #include <vector>
+#include <queue>
 #include <string>
 #include <cstdlib>
 #include <stdint.h>
@@ -19,10 +20,11 @@
 struct Location {
   int row;
   int column;
+  bool invalid;
 	
-	Location () {}
+	Location () {invalid = 0;}
 
-  Location(int row, int column) : row(row), column(column) { }
+  Location(int row, int column) : row(row), column(column) { invalid = 0; }
 
   Location move(int dir) {
     Location returnValue(row + ROW_DIRECTION[dir],
@@ -74,10 +76,16 @@ struct Square
     bool isFood;
     int hillPlayer;
     int antPlayer;
+    int vizitat;
+    bool assign;
+    int antNr;
+    
 
     Square() : isVisible(false), isWater(false), isHill(false), isFood(false)
     {
       hillPlayer = antPlayer = -1;
+	vizitat = -1;
+	assign = 0;
     }
 
     /** Resets the information for the square except water information. */
@@ -85,6 +93,8 @@ struct Square
     {
         isVisible = isHill = isFood = false;
         hillPlayer = antPlayer = -1;
+	vizitat = -1;
+	assign = 0;
     }
 };
 
