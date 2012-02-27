@@ -18,7 +18,7 @@ all: clean $(OBJECTS) $(MAINOBJECTS) $(EXECUTABLE) $(ALLEXECUTABLES)
 
 $(EXECUTABLE): $(OBJECTS)
 	$(CC) $(LDFLAGS) $(OBJECTS) -o $@
-	mv $@ ../../
+	mv $@ /media/D/Faculta/PA/Antz/lin
 
 %.o: %.cpp
 	$(CC) $(CFLAGS) $(LDFLAGS) -c -o $@ $^

@@ -2,24 +2,24 @@
 
 void Bot::playGame()
 {
-  /* Reads in game parameters. */
-  LOG("Reading initial parameters.");
-  std::cin >> state;
-  endTurn();
-  
-  srand((unsigned int)gparam::seed);
-
-  /* Continues to make moves until game is over. */
-  while(std::cin >> state) {
-    LOG("turn " << state.currentTurnNumber << ":");
-
-    state.mark_visible();
-	makeMoves();
-
-	writeMoves();
+	/* Reads in game parameters. */
+	LOG("Reading initial parameters.");
+	std::cin >> state;
 	endTurn();
-	LOG("Time taken: " << state.timer.getTime() << "ms" << std::endl);
-  }
+
+	srand((unsigned int)gparam::seed);
+
+	/* Continues to make moves until game is over. */
+	while(std::cin >> state) {
+    	LOG("turn " << state.currentTurnNumber << ":");
+
+    	state.mark_visible();
+		makeMoves();
+
+		writeMoves();
+		endTurn();
+		LOG("Time taken: " << state.timer.getTime() << "ms" << std::endl);
+	}
 }
 
 void Bot::makeMoves()
@@ -37,16 +37,6 @@ void Bot::makeMoves()
 			new_move.second.dir = direction;
 			
 			all_moves.insert(new_move);
-
-			/*
-			if (all_moves.find(new_move.first) != all_moves.end()) {
-				std::cout << "*************\n";
-				std::cout << "*ahahahahaha*\n";
-				std::cout << "*************\n\n";
-			}
-			state.grid[newLoc.row][newLoc.column].antPlayer = 0;
-			state.grid[state.myAnts[ant].row][state.myAnts[ant].column].antPlayer = -1;
-			*/
 		}
 	}
 }
@@ -75,16 +65,16 @@ void Bot::writeMoves()
 void Bot::endTurn()
 {
 	all_moves.clear();
-  LOG("Sending endTurn()");
+	LOG("Sending endTurn()");
 
-  /* If this wasn't the start game, reset the board. */
-  if(state.currentTurnNumber > 0) {
-      state.reset();
-  }
+	/* If this wasn't the start game, reset the board. */
+	if(state.currentTurnNumber > 0) {
+		state.reset();
+	}
 
-  /* Move to next turn. */
-  state.currentTurnNumber++;
+	/* Move to next turn. */
+	state.currentTurnNumber++;
 
-  std::cout << "go" << std::endl;
+	std::cout << "go" << std::endl;
 }
 

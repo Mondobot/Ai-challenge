@@ -31,21 +31,40 @@ double State::distance(const Location loc1, const Location loc2)
   return dr*dr + dc*dc;
 }
 
-/* Marks which squares on the map are visible. This function can be greatly
- * improved! */
+/** Simple wrapper to check if two locations are in range of each other*/
+bool State::in_range(const Location loc1, const Location loc2, double range)
+{
+	return (distance(loc1, loc2) <= range);
+}
+
+/* Marks which squares on the map are visible by the given ant */
+void State::mark_visible_by_ant(Location ant)
+{
+	Location start(ant.row - floor(sqrt(gparam::viewRadius)), 
+					ant.column - floor(sqrt(gparam::viewRadius)));
+	Location stop(ant.row + floor(sqrt(gparam::viewRadius)),
+					ant.column + floor(sqrt(gparam::viewRadius)));
+	Location i = start;
+
+	for (i.row = start.row; i.row != stop.row + 1; i = i.move(SOUTH))
+		for (i.column = start.column; i.column != stop.column + 1; i = i.move(EAST)) {
+
+			if (grid[i.row][i.column].isVisible)
+				continue;
+
+			if (in_range(i, ant, gparam::viewRadius))
+				grid[i.row][i.column].isVisible = true;
+
+			if (currentTurnNumber < 2)
+				LOG(i.row << " " << i.column << " "<< grid[i.row][i.column].isVisible);
+		}
+}
+
+/** Marks all visible squares (actually it calls ^^ for each ant) */
 void State::mark_visible()
 {
-  for (int row = 0; row < gparam::mapRows; ++row) {
-    for (int col = 0; col < gparam::mapColumns; ++col) {
-      /* Check of any of the ants sees this. */
-      for (int ant = 0; ant < (int)myAnts.size(); ++ant) {
-        if (distance(Location(row, col), myAnts[ant]) <= gparam::viewRadius) {
-          grid[row][col].isVisible = true;
-          break;
-        }
-      }
-    }
-  }
+	for (int i = 0; i < (int)myAnts.size(); ++i)
+		mark_visible_by_ant(myAnts[i]);
 }
 
 /* Input functions. */
