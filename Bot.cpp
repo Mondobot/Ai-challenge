@@ -11,9 +11,9 @@ void Bot::playGame()
 
 	/* Continues to make moves until game is over. */
 	while(std::cin >> state) {
-    	LOG("turn " << state.currentTurnNumber << ":");
+		LOG("turn " << state.currentTurnNumber << ":");
 
-    	state.mark_visible();
+		state.mark_visible();
 		makeMoves();
 
 		writeMoves();
@@ -44,14 +44,14 @@ void Bot::makeMoves()
 bool Bot::validMove(Location l)
 {
 	return (!state.grid[l.row][l.column].isWater &&
-        	state.grid[l.row][l.column].antPlayer == -1 &&
+			state.grid[l.row][l.column].antPlayer == -1 &&
 		all_moves.find(l) == all_moves.end());
 }
 
 void Bot::writeMoves()
 {
 	std::map<Location, Move>::iterator it;
-	Move m;	
+	Move m;
 
 	for (it = all_moves.begin(); it != all_moves.end(); ++it) {
 		m = (*it).second;

@@ -12,7 +12,6 @@
 #include <math.h>
 
 #include "global.h"
-
 #include "Logging.h"
 #include "Timer.h"
 
@@ -20,15 +19,15 @@
 struct Location {
 	int row;
 	int column;
-	
+
 	Location () {}
 
 	Location(int row, int column) : row(row), column(column) {
-		this->fix_this();	
+		this->fix_this();
 	}
 
 	Location move(int dir) {
-    	Location returnValue(row + ROW_DIRECTION[dir],
+		Location returnValue(row + ROW_DIRECTION[dir],
                          column + COLUMN_DIRECTION[dir]);
 		returnValue.fix_this();
 
@@ -43,7 +42,7 @@ struct Location {
 		} else if (this->row == gparam::mapRows) {
 			this->row = 0;
 		}
-		         
+
 		if (this->column < 0) {
 			this->column += gparam::mapColumns;
 		
@@ -52,18 +51,16 @@ struct Location {
 		
 		}
 	}
-
 };
 
-/** Structure that contains an ant move*/
+/** Class that contains an ant move*/
 struct Move {
 	Location loc;
 	int dir;
 
 	Move () {}
 
-	Move (Location loc , int dir) {
-		this->loc = loc;
+	Move (Location loc , int dir) : loc(loc.row, loc.column) {
 		this->dir = dir;
 	}
 };
@@ -71,7 +68,7 @@ struct Move {
 /** Function for comparing locations */
 struct compare_loc {
 	bool operator()(Location x, Location y) {
-		
+
 		return (x.row > y.row) || ((x.row == y.row) && (x.column > y.column));
 	}
 };
@@ -83,11 +80,13 @@ struct Square
 	bool isWater;
 	bool isHill;
 	bool isFood;
+	int exploreVal;
 	int hillPlayer;
 	int antPlayer;
 
 	Square() : isVisible(false), isWater(false), isHill(false), isFood(false) {
 		hillPlayer = antPlayer = -1;
+		exploreVal = 1;
 	}
 
 	/** Resets the information for the square except water information. */
@@ -99,7 +98,7 @@ struct Square
 
 struct State
 {
-  	/** False while we keep playing. */
+	/** False while we keep playing. */
 	bool gameOver;
 
 	int currentTurnNumber;
@@ -121,9 +120,9 @@ struct State
 
 	/** Constructor creates the map proper. */
 	State() : gameOver(false), currentTurnNumber(0) {
-    	
+
 		for (int i = 0; i < MAXIMUM_MAP_SIZE; ++i) {
-      		grid.push_back(std::vector<Square>(MAXIMUM_MAP_SIZE, Square()));
+			grid.push_back(std::vector<Square>(MAXIMUM_MAP_SIZE, Square()));
 		}
 	}
 
@@ -133,9 +132,10 @@ struct State
 	/** Marks visible cells. */
 	void mark_visible();
 
-	/** Marks all cells visible my one ant*/
+private:
 	void mark_visible_by_ant(Location ant);
 
+public:
 	/** This is just square of Euclid distance. */
 	bool in_range(const Location loc1, Location loc2, double range);
 
@@ -147,4 +147,3 @@ struct State
 std::istream& operator>>(std::istream &is, State &state);
 
 #endif
-
