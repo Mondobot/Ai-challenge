@@ -8,6 +8,7 @@
 #include <cstdlib>
 #include <stdint.h>
 #include <map>
+#include <queue>
 #include <utility>
 #include <math.h>
 
@@ -83,16 +84,23 @@ struct Square
 	int exploreVal;
 	int hillPlayer;
 	int antPlayer;
+	int vizitat;
+	bool assign;
+	int antNr;
 
 	Square() : isVisible(false), isWater(false), isHill(false), isFood(false) {
 		hillPlayer = antPlayer = -1;
 		exploreVal = 1;
+		vizitat = -1;
+		assign = 0;
 	}
 
 	/** Resets the information for the square except water information. */
 	void reset() {
 		isVisible = isHill = isFood = false;
 		hillPlayer = antPlayer = -1;
+		vizitat = -1;
+		assign = 0;
 	}
 };
 
