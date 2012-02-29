@@ -151,10 +151,49 @@ void Bot::assignFood()
 			state.grid[newLoc.row][newLoc.column].vizitat = -1;
 			viz.pop();
 		}
-		
+
 	}
 
 
+}
+
+void relative_pos(Location x, Location y, int mask[4])
+{
+	mask[NORTH] = mask[EAST] = mask[WEST] = mask[SOUTH] = 0;
+	int poz[2];
+	int dx = x.row - y.row;
+	int dxx = dx < 0 ? -dx : dx;
+	int dy = x.column - y.column;
+	int dyy = dy < 0 ? -dy : dy;
+
+	int dr = dxx < (gparam::mapRows - dxx) ? dxx : (gparam::mapRows - dxx);
+	int dc = dyy < (gparam::mapColumns - dyy) ? dyy : (gparam::mapColumns - dyy);
+
+	/* Calculationg the relative position properly*/
+	poz[0] = (dx > 0) ? -1 : 1;
+	poz[1] = (dy > 0) ? 1 : -1;
+
+	if (dr != dxx)
+		poz[0] *= -1;
+	if (dc != dyy)
+		poz[1] *= -1;
+	if (dr > dc)
+		poz[1] = 0;
+	if (dc > dr)
+		poz[0] = 0;
+
+	/* Fill the mask*/
+	if (poz[1] == 1)
+		mask[WEST] = 1;
+
+	if (poz[1] == -1)
+		mask[EAST] = 1;
+
+	if (poz[0] == 1)
+		mask[SOUTH] = 1;
+	
+	if (poz[0] == -1)
+		mask[NORTH] = 1;
 }
 
 bool Bot::validMove(Location l)
@@ -166,6 +205,7 @@ bool Bot::validMove(Location l)
 
 void Bot::writeMoves()
 {
+
 	std::map<Location, Move>::iterator it;
 	Move m;
 
@@ -175,7 +215,7 @@ void Bot::writeMoves()
 		std::cout << " " << m.loc.column << " ";
 		std::cout << DIRECTION_LETTER[m.dir] << std::endl; 
 	}
-  
+
 }
 
 void Bot::endTurn()
